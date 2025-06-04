@@ -1,0 +1,55 @@
+[build-system]
+requires = [
+    "scikit-build-core>=0.3.3",
+    "pybind11",
+    "Cython>=3.0",
+    "numpy<2.0;python_version<'3.12'",
+    "numpy>=1.25;python_version>='3.12'",
+]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "Assimulo"
+version = "3.7.0.dev0"
+authors = [
+    {name = "C. Winther (Andersson), C. Führer, J. Åkesson, M. Gäfvert", email = "christian.winther@modelon.com"},
+]
+description = "A package for solving ordinary differential equations and differential algebraic equations."
+readme = "README.md"
+license = {text = "LGPL"}
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python",
+    "Programming Language :: Cython",
+    "Programming Language :: C",
+    "Programming Language :: Fortran",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: Unix",
+]
+dependencies = [
+    "numpy<2.0;python_version<'3.12'",
+    "numpy>=1.25;python_version>='3.12'",
+    "scipy",
+    "matplotlib",
+    "Cython>=3.0",
+]
+
+[project.urls]
+Homepage = "http://www.jmodelica.org/assimulo"
+Download = "http://www.jmodelica.org/assimulo"
+
+[tool.scikit-build]
+minimum-version = "0.3.3"
+cmake.build-type = "Release"
+wheel.py-api = "py3"
+wheel.expand-macos-universal-tags = true
+
+[tool.scikit-build.cmake.define]
+# Optional: Define CMake variables if needed
+USE_OPENMP = {env="ASSIMULO_USE_OPENMP", default="OFF"}
+
+[tool.cibuildwheel]
+# Configuration for building wheels on CI
+build = "cp3{8,9,10,11,12}-*"
+skip = "pp* *musllinux*" 

@@ -22,15 +22,39 @@ import shutil
 import ctypes.util
 import argparse
 from os.path import isfile, join
-import numpy as np
+
+# Check NumPy version and provide helpful error message
+try:
+    import numpy as np
+    numpy_version = tuple(map(int, np.__version__.split('.')[:2]))
+    if numpy_version >= (2, 0):
+        print("ERROR: This version of Assimulo requires NumPy < 2.0 due to dependency on numpy.distutils")
+        print("numpy.distutils was removed in NumPy 2.0")
+        print("\nSolutions:")
+        print("1. Install compatible NumPy: pip install 'numpy<2.0'")
+        print("2. Use conda: conda install 'numpy<2.0'")
+        print("3. Wait for updated Assimulo version with modern build system")
+        sys.exit(1)
+except ImportError:
+    print("ERROR: NumPy is required but not installed")
+    print("Please install NumPy: pip install 'numpy<2.0'")
+    sys.exit(1)
+
 try:
     from numpy.distutils.core import setup
     import numpy.distutils as nd
     from numpy.distutils.fcompiler import intel
     have_nd = True
-except ImportError:
+except ImportError as e:
+    print(f"ERROR: Cannot import numpy.distutils: {e}")
+    print("\nThis error occurs because numpy.distutils has been deprecated and removed.")
+    print("Solutions:")
+    print("1. Install compatible NumPy: pip install 'numpy<2.0'")
+    print("2. Use Python < 3.12 with NumPy < 2.0")
+    print("3. Contact package maintainers for updated version")
     from setuptools import setup
     have_nd = False
+
 import Cython
 from Cython.Build import cythonize
 
